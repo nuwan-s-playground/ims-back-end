@@ -68,7 +68,14 @@ public class TeacherHttpController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/{teacherId}")
     public void deleteTeacher(@PathVariable int teacherId){
+        try(Connection connection = pool.getConnection()){
+            PreparedStatement stm = connection.prepareStatement("DELETE FROM teacher WHERE id=?");
+            stm.setInt(1,teacherId);
+            stm.executeUpdate();
 
-        System.out.println("delete");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
