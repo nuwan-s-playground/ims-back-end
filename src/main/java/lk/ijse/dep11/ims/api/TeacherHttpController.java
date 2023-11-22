@@ -30,8 +30,27 @@ public class TeacherHttpController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value="/{teacherId}",produces = "application/json")
-    public void getTeacherDetails(@PathVariable int teacherId){
+    public TeacherTO getTeacherDetails(@PathVariable int teacherId){
+        TeacherTO teacher = new TeacherTO();
+        try(Connection connection = pool.getConnection()){
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM teacher WHERE id=?");
+            stm.setInt(1,teacherId);
+            ResultSet resultSet = stm.executeQuery();
+            if(resultSet.next()){
+                int id = resultSet.getInt("id");
+                String name =resultSet.getString("name");
+                String contact =resultSet.getString("contact");
+                teacher.setId(id);
+                teacher.setName(name);
+                teacher.setContact(contact);
+            }
 
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("get");
+        return teacher;
 
     }
     @ResponseStatus(HttpStatus.OK)
