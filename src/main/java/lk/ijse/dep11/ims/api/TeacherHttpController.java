@@ -44,12 +44,9 @@ public class TeacherHttpController {
                 teacher.setName(name);
                 teacher.setContact(contact);
             }
-
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("get");
         return teacher;
 
     }
@@ -68,13 +65,12 @@ public class TeacherHttpController {
                 teacher.setId(id);
                 teacher.setName(name);
                 teacher.setContact(contact);
-
+                teacherList.add(teacher);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("get all");
-        return new ArrayList<>();
+        return teacherList;
 
     }
     @ResponseStatus(HttpStatus.CREATED)
