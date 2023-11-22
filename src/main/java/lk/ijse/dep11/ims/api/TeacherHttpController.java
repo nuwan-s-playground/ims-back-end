@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lk.ijse.dep11.ims.to.TeacherTO;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Parameter;
@@ -24,6 +25,7 @@ public class TeacherHttpController {
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.addDataSourceProperty("maximumPoolSize",10);
         pool = new HikariDataSource(config);
+        System.out.println("create connection pool");
 
 
     }
@@ -75,25 +77,25 @@ public class TeacherHttpController {
     }
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = "application/json", consumes = "application/json")
-    public TeacherTO createTeacher(@RequestBody TeacherTO teacher){
-        System.out.println("post");
+    public TeacherTO createTeacher(@RequestBody  @Validated(TeacherTO.Create.class) TeacherTO teacher){
         try(Connection connection = pool.getConnection()){
+            System.out.println("post");
             PreparedStatement stm = connection.prepareStatement("INSERT INTO  teacher(name,contact) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
             stm.setString(1,teacher.getName());
             stm.setString(2,teacher.getContact());
             int teacherId = stm.executeUpdate();
             System.out.println(teacherId);
             teacher.setId(teacherId);
+            return teacher;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return teacher;
 
     }
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value="/{teacherId}",consumes = "application/json")
-    public TeacherTO updateTeacher( @RequestBody TeacherTO teacher ){
+    public TeacherTO updateTeacher( @RequestBody @Validated(TeacherTO.Update.class) TeacherTO teacher ){
         try(Connection connection = pool.getConnection()){
             PreparedStatement stm = connection.prepareStatement("UPDATE teacher SET name=?,contact=? WHERE id=?");
             stm.setString(1,teacher.getName());
