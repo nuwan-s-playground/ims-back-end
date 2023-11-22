@@ -43,8 +43,20 @@ public class TeacherHttpController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = "application/json", consumes = "application/json")
     public TeacherTO createTeacher(@RequestBody TeacherTO teacher){
+        System.out.println("post");
+        try(Connection connection = pool.getConnection()){
+            PreparedStatement stm = connection.prepareStatement("INSERT INTO  teacher(name,contact) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
+            stm.setString(1,teacher.getName());
+            stm.setString(2,teacher.getContact());
+            int teacherId = stm.executeUpdate();
+            System.out.println(teacherId);
+            teacher.setId(teacherId);
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return teacher;
+
     }
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value="/{teacherId}",consumes = "application/json")
