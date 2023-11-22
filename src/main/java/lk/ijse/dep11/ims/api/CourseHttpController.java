@@ -1,29 +1,42 @@
 package lk.ijse.dep11.ims.api;
 
+import lk.ijse.dep11.ims.to.CourseTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/courses")
 public class CourseHttpController {
 
+    
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public void createCourse(){}
+    public CourseTO createCourse(@RequestBody CourseTO course){
+        return null;
+    }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping(value = "/${courseID}", consumes = "application/json")
-    public void updateCourse(){}
+    @PatchMapping(value = "/{courseId}", consumes = "application/json")
+    public void updateCourse(@RequestBody CourseTO course,
+                                 @PathVariable int courseId){}
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping(value = "/${courseID}")
-    public void deleteCourse(){}
+    @DeleteMapping( "/{courseId}")
+    public void deleteCourse(@PathVariable int courseId){}
 
-    @GetMapping(value = "/${courseID}", produces = "application/json")
-    public void getCourseDetails(){}
+    @GetMapping(value = "/{courseId}", produces = "application/json")
+    public CourseTO getCourseDetails(){
+        return null;
+    }
 
-    @GetMapping(value = "/${courseID}", produces = "application/json")
-    public void getAllCourses(){}
+    @GetMapping( produces = "application/json")
+    public List<CourseTO> getAllCourses(){
+        return null;
+    }
 
 }

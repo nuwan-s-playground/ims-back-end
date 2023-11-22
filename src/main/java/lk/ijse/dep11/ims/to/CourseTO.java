@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseTO implements Serializable {
-    private int id;
+    private int courseId;
     private String name;
     private int duration_in_months;
 }
