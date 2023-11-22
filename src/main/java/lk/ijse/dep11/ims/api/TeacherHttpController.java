@@ -56,8 +56,26 @@ public class TeacherHttpController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(produces = "application/json")
     public List<TeacherTO> getAllTeachersDetails(){
+        List<TeacherTO> teacherList = new ArrayList<>();
+        try(Connection connection = pool.getConnection()){
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM teacher ORDER BY id");
+            while(resultSet.next()){
+                int id = resultSet.getInt("id");
+                String name =resultSet.getString("name");
+                String contact =resultSet.getString("contact");
+                TeacherTO teacher = new TeacherTO();
+                teacher.setId(id);
+                teacher.setName(name);
+                teacher.setContact(contact);
 
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("get all");
         return new ArrayList<>();
+
     }
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = "application/json", consumes = "application/json")
