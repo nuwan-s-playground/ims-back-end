@@ -61,7 +61,17 @@ public class TeacherHttpController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value="/{teacherId}",consumes = "application/json")
     public TeacherTO updateTeacher( @RequestBody TeacherTO teacher ){
+        try(Connection connection = pool.getConnection()){
+            PreparedStatement stm = connection.prepareStatement("UPDATE teacher SET name=?,contact=? WHERE id=?");
+            stm.setString(1,teacher.getName());
+            stm.setString(2,teacher.getContact());
+            stm.setInt(3,teacher.getId());
+            stm.executeUpdate();
 
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("patch");
         return teacher;
     }
